@@ -1,0 +1,8 @@
+{
+  "name": "SI TOKO - Manajemen Part Komputer & Percetakan",
+  "description": "Sistem informasi manajemen toko part komputer, aksesoris, dan jasa percetakan lengkap dengan POS kasir, inventaris stok, harga & margin, pembelian, supplier, dan laporan laba rugi.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
