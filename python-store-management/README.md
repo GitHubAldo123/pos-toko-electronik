@@ -1,73 +1,65 @@
-# SI TOKO - Manajemen Part Komputer & Percetakan
+# SI TOKO - Manajemen Part Komputer & Percetakan (MySQL & Flask)
 
-Aplikasi manajemen operasional toko lengkap berbasis web untuk usaha yang bergerak di bidang penjualan part komputer, aksesoris komputer, dan jasa percetakan.
-
----
-
-## Fitur Utama
-
-1. **Dashboard Statistik Real-Time**:
-   - Total produk & total stok fisik
-   - Nilai persediaan persediaan (HPP modal)
-   - Omset penjualan & laba kotor hari ini
-   - Grafik analitik harian, mingguan, dan bulanan
-   - Notifikasi stok menipis dan barang habis
-   - Daftar 5 produk terlaris
-
-2. **Katalog Produk & Kategori**:
-   - CRUD Produk lengkap (SKU, barcode, merek, spesifikasi, satuan, lokasi rak)
-   - Filter divisi Part Komputer & Perlengkapan Percetakan
-   - Kalkulator margin laba otomatis (`(Jual - Modal) / Jual * 100%`)
-
-3. **Manajemen Harga & Margin**:
-   - Ubah harga modal & harga jual per unit
-   - Ubah harga massal (Batch Price Update berdasarkan % atau nominal)
-   - Audit trail riwayat perubahan harga
-
-4. **Manajemen Stok & Mutasi**:
-   - Stok Masuk (IN) & Stok Keluar (OUT)
-   - Stok Opname fisik vs sistem (perhitungan selisih otomatis)
-   - Log mutasi stok lengkap dengan waktu, user, dan alasan perubahan
-
-5. **Kasir POS & Transaksi Penjualan**:
-   - Pencarian cepat nama / kode / barcode
-   - Keranjang belanja kasir
-   - Potongan diskon (nominal atau persentase)
-   - Metode bayar: Tunai (tombol uang pas & preset), Transfer Bank, QRIS
-   - Pengurangan stok otomatis konsisten & pencatatan snapshot modal transaksi
-
-6. **Jasa Percetakan**:
-   - Layanan Print B/W, Warna, Fotokopi, Jilid, Laminasi, Cetak Foto, Banner
-   - Kalkulator cepat biaya cetak dan finishing
-   - Konfigurasi pemakaian bahan stok
-
-7. **Pembelian (PO Supplier)**:
-   - Pencatatan pembelian dari supplier
-   - Otomatis tambah stok & mutasi masuk tanpa merubah harga jual
-
-8. **Laporan & Ekspor**:
-   - Laporan Penjualan, Laba Rugi Komprehensif, Nilai Stok, Barang Terlaris, Pembelian
-   - Filter periode: Hari ini, Kemarin, 7 hari, Bulan ini, Tahun ini, Custom range
-   - Ekspor ke Excel / CSV (UTF-8 BOM)
-   - Cetak Laporan (Print-ready formal format)
-
-9. **Cetak Struk Thermal**:
-   - Format printer thermal 58 mm dan 80 mm
+Aplikasi manajemen operasional toko lengkap berbasis web untuk usaha yang bergerak di bidang penjualan part komputer, aksesoris komputer, dan jasa percetakan dengan database **MySQL (InnoDB / utf8mb4)**.
 
 ---
 
-## Panduan Instalasi di Windows (VS Code)
+## 1. Setup Database MySQL
 
-### 1. Prasyarat
-- Komputer Windows 10 atau 11
-- Python 3.10+ terinstal (pastikan centang "Add Python to PATH" saat instalasi)
-- Visual Studio Code
+File skrip SQL lengkap siap import telah disediakan di:
+`database_mysql.sql`
 
-### 2. Langkah Menjalankan
-Buka Terminal di VS Code (`Ctrl + \``):
+Skrip tersebut mencakup:
+- Pembuatan database `si_toko` dengan charset `utf8mb4_unicode_ci`
+- 13 tabel relasional (Engine `InnoDB`, Foreign Keys, Indexes, Auto-Increment)
+- Data seed lengkap (20 produk nyata, 12 jasa cetak, supplier, pelanggan, pengaturan toko)
+- View laporan `v_inventory_summary` & `v_daily_sales_summary`
+
+### Cara Impor Skrip ke MySQL:
+
+#### Opsi A: Melalui Command Line (CMD / PowerShell / Bash)
+```bash
+mysql -u root -p < database_mysql.sql
+```
+*(Ketik password MySQL Anda saat diminta, lalu tekan Enter)*
+
+#### Opsi B: Melalui phpMyAdmin (XAMPP / Laragon)
+1. Buka browser: `http://localhost/phpmyadmin`
+2. Klik tab **Import** di bagian atas.
+3. Klik tombol **Choose File** / Telusuri, lalu pilih file `database_mysql.sql`.
+4. Klik tombol **Go** / Kirim di bagian bawah.
+5. Database `si_toko` dan seluruh tabel berhasil dibuat!
+
+#### Opsi C: Melalui MySQL Workbench / DBeaver
+1. Buka MySQL Workbench atau DBeaver, hubungkan ke koneksi MySQL lokal.
+2. Buka menu **File** -> **Open SQL Script**, pilih file `database_mysql.sql`.
+3. Klik icon petir (**Execute Script**).
+
+---
+
+## 2. Konfigurasi Koneksi Python ke MySQL
+
+Buat file `.env` di dalam folder ini (atau sesuaikan di `config.py`):
+
+```ini
+MYSQL_USER=root
+MYSQL_PASSWORD=rahasia_anda
+MYSQL_HOST=localhost
+MYSQL_PORT=3306
+MYSQL_DB=si_toko
+
+# Atau langsung gunakan format URL:
+# DATABASE_URL=mysql+pymysql://root:password@localhost:3306/si_toko?charset=utf8mb4
+```
+
+---
+
+## 3. Langkah Menjalankan di Windows (VS Code)
+
+Buka terminal di VS Code (`Ctrl + \``):
 
 ```powershell
-# 1. Masuk ke direktori proyek
+# 1. Masuk ke direktori
 cd python-store-management
 
 # 2. Buat virtual environment
@@ -75,15 +67,13 @@ python -m venv venv
 
 # 3. Aktifkan virtual environment
 .\venv\Scripts\Activate.ps1
-# Jika muncul error execution policy di PowerShell, jalankan dulu:
-# Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
 
-# 4. Install dependensi
+# 4. Install dependensi (termasuk PyMySQL & Flask)
 pip install -r requirements.txt
 
-# 5. Jalankan server Flask
+# 5. Jalankan aplikasi Flask
 python app.py
 ```
 
-Buka browser di:
+Aplikasi Flask akan berjalan di:
 `http://localhost:5000`

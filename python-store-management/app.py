@@ -1,6 +1,6 @@
 """
 SI TOKO - Manajemen Part Komputer & Percetakan
-Backend Python Flask + SQLite
+Backend Python Flask + MySQL (PyMySQL) / SQLite
 """
 
 import os

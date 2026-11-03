@@ -11,6 +11,7 @@ import {
   FileBarChart,
   Settings,
   Code2,
+  Database,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -37,7 +38,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'partners', label: 'Supplier & Pelanggan', icon: Users },
     { id: 'reports', label: 'Laporan & Keuangan', icon: FileBarChart },
     { id: 'settings', label: 'Pengaturan Toko', icon: Settings },
-    { id: 'python-guide', label: 'Panduan Python & VS Code', icon: Code2, badge: 'Code' },
+    { id: 'python-guide', label: 'Database MySQL & Python', icon: Database, badge: 'MySQL' },
   ];
 
   return (
